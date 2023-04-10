@@ -16,7 +16,8 @@ Create a `.env` file for your environment and call the bash scripts [server-setu
 
 **Note**: If you are using Windows and WSL2 you may need to run dos2unix on .env and .sh files
 
-<b>Server Setup (once):</b>
+### Server Setup 
+Only needs to be executed once per permanent installation of Wildfly.
 
 | Name                | Description                                                  |
 |---------------------|--------------------------------------------------------------|
@@ -29,7 +30,8 @@ Create a `.env` file for your environment and call the bash scripts [server-setu
 | WILDFLY_USER        | Admin username (if empty no admin user is created)           |
 
 
-<b>App Setup (1 or more):</b>
+### App Setup 
+Must be executed once per app installed in Wildfly.
 
 | Name                | Description                                                              |
 |---------------------|--------------------------------------------------------------------------|
@@ -53,9 +55,9 @@ docker exec -it demo /opt/jboss/wildfly/bin/jboss-cli.sh --connect -c "undeploy 
 docker exec -it demo /opt/jboss/wildfly/bin/jboss-cli.sh --connect -c shutdown
 docker cp demo:/opt/jboss/wildfly .
 ```
-<b>Docker Runtime</b>
+### Docker Runtime
 
-These environment variables are Docker specific and are used by the entrypoint.sh script to wait on the Oracle database to start.
+These environment variables are Docker specific and are used by the [docker-entrypoint.sh](https://github.com/JeffersonLab/wildfly/blob/main/scripts/docker-entrypoint.sh) script to wait on the Oracle database to start.
 
 | Name                | Description                                                                                     |
 |---------------------|-------------------------------------------------------------------------------------------------|
