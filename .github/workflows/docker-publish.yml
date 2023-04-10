@@ -32,7 +32,6 @@ jobs:
         name: Push to Docker Hub
         uses: docker/build-push-action@v3
         with:
-          file: Dockerfile
           push: true
           build-args: |
             CUSTOM_CRT_URL=http://pki.jlab.org/JLabCA.crt
