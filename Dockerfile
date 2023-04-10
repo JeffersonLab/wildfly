@@ -1,6 +1,7 @@
 ARG BUILD_IMAGE=gradle:7.4-jdk17
 ARG RUN_IMAGE=quay.io/wildfly/wildfly:26.1.3.Final-jdk17
 ARG ORACLE_DRIVER_PATH=/ojdbc11-21.7.0.0.jar
+ARG CUSTOM_CRT_URL=http://pki.jlab.org/JLabCA.crt
 
 ################## Stage 0
 FROM ${BUILD_IMAGE} as builder
