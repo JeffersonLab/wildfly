@@ -28,7 +28,6 @@ RUN mkdir /unicopy \
 ################## Stage 1
 FROM ${RUN_IMAGE} as runner
 ARG CUSTOM_CRT_URL
-ARG INCLUDE_SMOOTH_LIB
 ARG RUN_USER=jboss:jboss
 ARG ORACLE_DRIVER_PATH
 USER root
@@ -38,7 +37,6 @@ RUN if [ -z "${CUSTOM_CRT_URL}" ] ; then echo "No custom cert needed"; else \
        && update-ca-trust \
        && keytool -import -alias custom -file /etc/pki/ca-trust/source/anchors/customcert.crt -cacerts -storepass changeit -noprompt \
     ; fi \
-    && yum install -y wget \
     && chsh -s /bin/bash jboss \
     && /server-setup.sh /docker-server.env \
     && rm -rf /opt/jboss/wildfly/standalone/configuration/standalone_xml_history
