@@ -1,5 +1,5 @@
 # wildfly [![Docker (demo)](https://img.shields.io/docker/v/jeffersonlab/wildfly?sort=semver&label=DockerHub)](https://hub.docker.com/r/jeffersonlab/wildfly)
-Configurable [Wildfly](https://www.wildfly.org/) base Docker image 
+Configurable [Wildfly](https://www.wildfly.org/) base Docker image and bash setup scripts.
 
 ## Overview
 This Jefferson Lab Wildfly template assumes apps are authenticated with [Keycloak](https://www.keycloak.org/) and use an Oracle database.  Optionally an SMTP mail server can be configured.   The full EE Wildfly distribution is used as a starting point and a few libraries are added including:
