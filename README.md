@@ -54,6 +54,7 @@ docker exec -it demo /opt/jboss/wildfly/bin/jboss-cli.sh --connect -c shutdown
 docker cp demo:/opt/jboss/wildfly .
 ```
 <b>Docker Runtime</b>
+
 These environment variables are Docker specific and are used by the entrypoint.sh script to wait on the Oracle database to start.
 
 | Name                | Description                                                                                     |
