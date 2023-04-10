@@ -1,6 +1,9 @@
 # wildfly [![Docker (demo)](https://img.shields.io/docker/v/jeffersonlab/wildfly?sort=semver&label=DockerHub)](https://hub.docker.com/r/jeffersonlab/wildfly)
 Configurable [Wildfly](https://www.wildfly.org/) base Docker image 
 
+## Overview
+This Jefferson Lab Wildfly template assumes apps are authenticated with [Keycloak](https://www.keycloak.org/) and use an Oracle database.  Optionally an SMTP mail server can be configured. 
+
 ## Configure
 Wildfly must be pre-configured before the first deployment of an app.  The bash scripts located in the `scripts` directory are used with the following environment variables:
 
