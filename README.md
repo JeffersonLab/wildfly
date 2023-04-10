@@ -53,3 +53,14 @@ docker exec -it demo /opt/jboss/wildfly/bin/jboss-cli.sh --connect -c "undeploy 
 docker exec -it demo /opt/jboss/wildfly/bin/jboss-cli.sh --connect -c shutdown
 docker cp demo:/opt/jboss/wildfly .
 ```
+<b>Docker Runtime</b>
+These environment variables are Docker specific and are used by the entrypoint.sh script to wait on the Oracle database to start.
+
+| Name                | Description                                                                                     |
+|---------------------|-------------------------------------------------------------------------------------------------|
+| ORACLE_DATASOURCE   | Oracle Datasource name to use to connect to DB from TestOracleConnection utility                |
+| ORACLE_SERVER       | Host name and port of Oracle server to use to connect to DB from TestOracleConnection utility   |
+| ORACLE_USER         | Username to use to connect to DB from TestOracleConnection utility                              |
+| ORACLE_PASS         | Password to use to connect to DB from TestOracleConnection utility                              |
+| ORACLE_SERVICE      | Oracle Service name to use to connect to DB from TestOracleConnection utility                   |           
+
