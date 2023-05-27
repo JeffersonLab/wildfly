@@ -116,19 +116,27 @@ ${WILDFLY_APP_HOME}/bin/add-user.sh "${WILDFLY_USER}" "${WILDFLY_PASS}"
 
 config_ssl() {
 if [[ -z "${KEYSTORE_NAME}" ]]; then
-  echo "Skipping config ssl because KEYSTORE_NAME undefined"
-  return 0
-fi
-
-${WILDFLY_CLI_PATH} -c <<EOF
-batch
-/subsystem=elytron/key-store=httpsKS:add(path=${KEYSTORE_NAME},relative-to=jboss.server.config.dir,credential-reference={clear-text=${KEYSTORE_PASS}},type=PKCS12)
-/subsystem=elytron/key-manager=httpsKM:add(key-store=httpsKS,credential-reference={clear-text=${KEYSTORE_PASS}})
-/subsystem=elytron/server-ssl-context=httpsSSC:add(key-manager=httpsKM,protocols=["TLSv1.2"])
-/subsystem=undertow/server=default-server/https-listener=https:undefine-attribute(name=security-realm)
-/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value=httpsSSC)
-run-batch
+  echo "No custom keystore set.  Config ssl to use system trust store.  This includes any custom CA certs listed in Dockerfile."
+  ${WILDFLY_CLI_PATH} -c <<EOF
+  batch
+  /subsystem=elytron/key-store=systemKS:add(path=/etc/pki/java/cacerts,credential-reference={clear-text=changeit},type=PKCS12)
+  /subsystem=elytron/key-manager=systemKM:add(key-store=systemKS,credential-reference={clear-text=changeit})
+  /subsystem=elytron/server-ssl-context=systemSSC:add(key-manager=systemKM,protocols=["TLSv1.2"])
+  /subsystem=undertow/server=default-server/https-listener=https:undefine-attribute(name=security-realm)
+  /subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value=systemSSC)
+  run-batch
 EOF
+else
+  ${WILDFLY_CLI_PATH} -c <<EOF
+  batch
+  /subsystem=elytron/key-store=httpsKS:add(path=${KEYSTORE_NAME},relative-to=jboss.server.config.dir,credential-reference={clear-text=${KEYSTORE_PASS}},type=PKCS12)
+  /subsystem=elytron/key-manager=httpsKM:add(key-store=httpsKS,credential-reference={clear-text=${KEYSTORE_PASS}})
+  /subsystem=elytron/server-ssl-context=httpsSSC:add(key-manager=httpsKM,protocols=["TLSv1.2"])
+  /subsystem=undertow/server=default-server/https-listener=https:undefine-attribute(name=security-realm)
+  /subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value=httpsSSC)
+  run-batch
+EOF
+fi
 }
 
 config_proxy() {
