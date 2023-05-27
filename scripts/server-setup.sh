@@ -97,7 +97,7 @@ EOF
 }
 
 apply_elytron_patch() {
-if [[ -z "${APPLY_ELYTRON_PATCH}}" ]]; then
+if [[ -z "${APPLY_ELYTRON_PATCH}" ]]; then
   echo "Skipping elytron patch because APPLY_ELYTRON_PATCH undefined"
   return 0
 fi
@@ -106,7 +106,7 @@ wget -O "${WILDFLY_APP_HOME}/modules/system/layers/base/org/wildfly/security/ely
 }
 
 config_admin_user() {
-if [[ -z "${APPLY_ELYTRON_PATCH}}" ]]; then
+if [[ -z "${APPLY_ELYTRON_PATCH}" ]]; then
   echo "Skipping config admin because WILDFLY_USER undefined"
   return 0
 fi
