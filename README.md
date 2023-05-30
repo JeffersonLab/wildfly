@@ -1,6 +1,12 @@
 # wildfly [![Docker (demo)](https://img.shields.io/docker/v/jeffersonlab/wildfly?sort=semver&label=DockerHub)](https://hub.docker.com/r/jeffersonlab/wildfly)
 Configurable [Wildfly](https://www.wildfly.org/) base Docker image and bash setup scripts.
 
+---
+ - [Overview](https://github.com/JeffersonLab/wildfly#overview)
+ - [Configure](https://github.com/JeffersonLab/wildfly#configure)
+ - [Release](https://github.com/JeffersonLab/wildfly#release)
+---
+
 ## Overview
 This Jefferson Lab Wildfly template assumes apps are authenticated with [Keycloak](https://www.keycloak.org/) and use an Oracle database.  Optionally an SMTP mail server can be configured.   The full EE Wildfly distribution is used as a starting point and a few libraries are added including:
 
@@ -67,3 +73,6 @@ These environment variables are Docker specific and are used by the [docker-entr
 | ORACLE_PASS         | Password to use to connect to DB from TestOracleConnection utility                              |
 | ORACLE_SERVICE      | Oracle Service name to use to connect to DB from TestOracleConnection utility                   |           
 
+## Release
+1. Create a new release on the GitHub Releases page.  The release should enumerate changes and link issues.
+2. Build and publish a new Docker image [from the GitHub tag](https://gist.github.com/slominskir/a7da801e8259f5974c978f9c3091d52c#8-build-an-image-based-of-github-tag). GitHub is configured to do this automatically on git push of semver tag (typically part of GitHub release) or the [Publish to DockerHub](https://github.com/JeffersonLab/wildfly/actions/workflows/docker-publish.yml) action can be manually triggered after selecting a tag.
