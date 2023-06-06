@@ -1,20 +1,15 @@
 ARG BUILD_IMAGE=gradle:7.4-jdk17
 ARG RUN_IMAGE=quay.io/wildfly/wildfly:26.1.3.Final-jdk17
 ARG ORACLE_DRIVER_PATH=/ojdbc11-21.7.0.0.jar
-ARG CUSTOM_CRT_URL=http://pki.jlab.org/JLabCA.crt
+ARG CUSTOM_CRT_URL="http://crl.acc.jlab.org/acc-ca.crt http://pki.jlab.org/JLabCA.crt"
 
 ################## Stage 0
 FROM ${BUILD_IMAGE} as builder
 ARG CUSTOM_CRT_URL
 USER root
 WORKDIR /
-RUN if [ -z "${CUSTOM_CRT_URL}" ] ; then echo "No custom cert needed"; else \
-       wget -O /usr/local/share/ca-certificates/customcert.crt $CUSTOM_CRT_URL \
-       && update-ca-certificates \
-       && keytool -import -alias custom -file /usr/local/share/ca-certificates/customcert.crt -cacerts -storepass changeit -noprompt \
-       && export OPTIONAL_CERT_ARG=--cert=/etc/ssl/certs/ca-certificates.crt \
-    ; fi
 COPY . /app
+RUN /app/scripts/update-certs-builder.sh ${CUSTOM_CRT_URL}
 
 ## Let's minimize layers in final-product by organizing files into a single copy structure
 RUN mkdir /unicopy \
@@ -23,7 +18,8 @@ RUN mkdir /unicopy \
     && cp /app/scripts/docker-entrypoint.sh /unicopy \
     && cp /app/scripts/server-setup.sh /unicopy \
     && cp /app/scripts/provided-setup.sh /unicopy \
-    && cp /app/scripts/app-setup.sh /unicopy
+    && cp /app/scripts/app-setup.sh /unicopy \
+    && cp /app/scripts/update-certs-runner.sh /unicopy
 
 ################## Stage 1
 FROM ${RUN_IMAGE} as runner
@@ -32,11 +28,7 @@ ARG RUN_USER=jboss:jboss
 ARG ORACLE_DRIVER_PATH
 USER root
 COPY --from=builder /unicopy /
-RUN if [ -z "${CUSTOM_CRT_URL}" ] ; then echo "No custom cert needed"; else \
-       curl -sS -o /etc/pki/ca-trust/source/anchors/customcert.crt $CUSTOM_CRT_URL \
-       && update-ca-trust \
-       && keytool -import -alias custom -file /etc/pki/ca-trust/source/anchors/customcert.crt -cacerts -storepass changeit -noprompt \
-    ; fi \
+RUN /update-certs-runner.sh ${CUSTOM_CRT_URL} \
     && chsh -s /bin/bash jboss \
     && /server-setup.sh /docker-server.env \
     && rm -rf /opt/jboss/wildfly/standalone/configuration/standalone_xml_history
