@@ -17,4 +17,4 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v3
       - name: Run Docker Build
-        run: docker build --build-arg CUSTOM_CRT_URL=http://pki.jlab.org/JLabCA.crt .
+        run: docker build .
