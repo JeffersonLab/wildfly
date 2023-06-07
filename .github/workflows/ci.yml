@@ -14,5 +14,7 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Project
+        uses: actions/checkout@v3
+      - name: Run Docker Build
         run: docker build --build-arg CUSTOM_CRT_URL=http://pki.jlab.org/JLabCA.crt .
