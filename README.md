@@ -1,4 +1,4 @@
-# wildfly [![Docker (demo)](https://img.shields.io/docker/v/jeffersonlab/wildfly?sort=semver&label=DockerHub)](https://hub.docker.com/r/jeffersonlab/wildfly)
+# wildfly [![CI](https://github.com/JeffersonLab/wildfly/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffersonLab/wildfly/actions/workflows/ci.yml) [![Docker (demo)](https://img.shields.io/docker/v/jeffersonlab/wildfly?sort=semver&label=DockerHub)](https://hub.docker.com/r/jeffersonlab/wildfly)
 Configurable [Wildfly](https://www.wildfly.org/) base Docker image and bash setup scripts.
 
 ---
