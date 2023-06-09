@@ -33,7 +33,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          build-args: |
-            CUSTOM_CRT_URL=http://pki.jlab.org/JLabCA.crt
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
