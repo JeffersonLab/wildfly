@@ -16,15 +16,8 @@ FUNCTIONS=(apply_elytron_patch
            wildfly_reload
            wildfly_stop)
 
-VARIABLES=(EMAIL_FROM
-           EMAIL_HOST
-           EMAIL_PORT
-           ORACLE_DRIVER_PATH
-           ORACLE_DRIVER_URL
-           WILDFLY_APP_HOME
-           WILDFLY_RUN_USER
-           WILDFLY_USER
-           WILDFLY_PASS)
+VARIABLES=(WILDFLY_APP_HOME
+           WILDFLY_RUN_USER)
 
 if [[ $# -eq 0 ]] ; then
     echo "Usage: $0 [var file] <optional function>"
@@ -46,10 +39,10 @@ echo "Loading environment $1"
 fi
 
 # Verify expected env set:
-#for i in "${!VARIABLES[@]}"; do
-#  var=${VARIABLES[$i]}
-#  [ -z "${!var}" ] && { echo "$var is not set. Exiting."; exit 1; }
-#done
+for i in "${!VARIABLES[@]}"; do
+  var=${VARIABLES[$i]}
+  [ -z "${!var}" ] && { echo "$var is not set. Exiting."; exit 1; }
+done
 
 # Optional params
 # - PROVIDED_LIBS
@@ -59,6 +52,13 @@ fi
 # - PERSISTENT_SESSIONS
 # - WILDFLY_SKIP_START
 # - WILDFLY_SKIP_STOP
+# - EMAIL_FROM
+# - EMAIL_HOST
+# - EMAIL_PORT
+# - ORACLE_DRIVER_PATH
+# - ORACLE_DRIVER_URL
+# - WILDFLY_USER
+# - WILDFLY_PASS
 
 WILDFLY_CLI_PATH=${WILDFLY_APP_HOME}/bin/jboss-cli.sh
 MAIN_ENV_FILE=$1
