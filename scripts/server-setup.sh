@@ -11,7 +11,6 @@ FUNCTIONS=(apply_elytron_patch
            config_persist_sessions_on_redeploy
            config_param_limits
            config_provided
-           config_extra_provided
            config_proxy
            wildfly_reload
            wildfly_stop)
