@@ -106,7 +106,7 @@ wget -O "${WILDFLY_APP_HOME}/modules/system/layers/base/org/wildfly/security/ely
 }
 
 config_admin_user() {
-if [[ -z "${APPLY_ELYTRON_PATCH}" ]]; then
+if [[ -z "${WILDFLY_USER}" ]]; then
   echo "Skipping config admin because WILDFLY_USER undefined"
   return 0
 fi
