@@ -11,11 +11,6 @@ VARIABLES=(KEYCLOAK_REALM
            KEYCLOAK_SECRET
            KEYCLOAK_SERVER_URL
            KEYCLOAK_WAR
-           ORACLE_DATASOURCE
-           ORACLE_PASS
-           ORACLE_SERVER
-           ORACLE_SERVICE
-           ORACLE_USER
            WILDFLY_APP_HOME)
 
 if [[ $# -eq 0 ]] ; then
@@ -44,6 +39,11 @@ for i in "${!VARIABLES[@]}"; do
 done
 
 # Optional params
+# - ORACLE_DATASOURCE
+# - ORACLE_PASS
+# - ORACLE_SERVER
+# - ORACLE_SERVICE
+# - ORACLE_USER
 # - WILDFLY_SKIP_START
 # - WILDFLY_SKIP_STOP
 
@@ -77,7 +77,12 @@ run-batch
 EOF
 }
 
-config_oracle_client() {
+config_oracle_client()
+if [[ -z "${ORACLE_DATASOURCE}" ]]; then
+  echo "Skipping config_oracle_client because ORACLE_DATASOURCE undefined"
+  return 0
+fi
+
 ${WILDFLY_CLI_PATH} -c <<EOF
 batch
 data-source add --name=jdbc/${ORACLE_DATASOURCE} --driver-name=oracle --jndi-name=java:/jdbc/${ORACLE_DATASOURCE} --connection-url=jdbc:oracle:thin:@//${ORACLE_SERVER}/${ORACLE_SERVICE} --user-name=${ORACLE_USER} --password=${ORACLE_PASS} --max-pool-size=3 --min-pool-size=1 --flush-strategy=EntirePool --use-fast-fail=true --blocking-timeout-wait-millis=5000 --query-timeout=30 --idle-timeout-minutes=5 --background-validation=true --background-validation-millis=30000 --validate-on-match=false --check-valid-connection-sql="select 1 from dual" --prepared-statements-cache-size=10 --share-prepared-statements=true
