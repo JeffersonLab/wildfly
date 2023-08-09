@@ -77,7 +77,7 @@ run-batch
 EOF
 }
 
-config_oracle_client()
+config_oracle_client() {
 if [[ -z "${ORACLE_DATASOURCE}" ]]; then
   echo "Skipping config_oracle_client because ORACLE_DATASOURCE undefined"
   return 0
