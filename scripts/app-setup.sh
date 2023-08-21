@@ -67,12 +67,12 @@ echo $(date) " Wildfly started!"
 }
 
 config_keycloak_client() {
-DEPLOYMENT_CONFIG=principal-attribute="preferred_username",ssl-required=EXTERNAL,resource="${KEYCLOAK_RESOURCE}",realm="${KEYCLOAK_REALM}",auth-server-url=${KEYCLOAK_SERVER_URL}
+DEPLOYMENT_CONFIG=principal-attribute="preferred_username",ssl-required=EXTERNAL,resource="\${env.KEYCLOAK_RESOURCE:${KEYCLOAK_RESOURCE}}",realm="\${env.KEYCLOAK_REALM:${KEYCLOAK_REALM}}",auth-server-url=\${env.KEYCLOAK_SERVER_URL:${KEYCLOAK_SERVER_URL}}
 
 ${WILDFLY_CLI_PATH} -c <<EOF
 batch
-/subsystem=elytron-oidc-client/secure-deployment="${KEYCLOAK_WAR}"/:add(${DEPLOYMENT_CONFIG})
-/subsystem=elytron-oidc-client/secure-deployment="${KEYCLOAK_WAR}"/credential=secret:add(secret="${KEYCLOAK_SECRET}")
+/subsystem=elytron-oidc-client/secure-deployment="\${env.KEYCLOAK_WAR:${KEYCLOAK_WAR}}"/:add(${DEPLOYMENT_CONFIG})
+/subsystem=elytron-oidc-client/secure-deployment="\${env.KEYCLOAK_WAR:${KEYCLOAK_WAR}}"/credential=secret:add(secret="\${env.KEYCLOAK_SECRET:${KEYCLOAK_SECRET}}")
 run-batch
 EOF
 }

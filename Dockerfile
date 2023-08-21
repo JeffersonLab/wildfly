@@ -14,6 +14,7 @@ RUN /app/scripts/update-certs-builder.sh ${CUSTOM_CRT_URL}
 ## Let's minimize layers in final-product by organizing files into a single copy structure
 RUN mkdir /unicopy \
     && cp /app/config/docker-server.env /unicopy \
+    && cp /app/config/docker-app.env /unicopy \
     && cp /app/scripts/TestOracleConnection.java /unicopy \
     && cp /app/scripts/docker-entrypoint.sh /unicopy \
     && cp /app/scripts/server-setup.sh /unicopy \
@@ -31,6 +32,7 @@ COPY --from=builder /unicopy /
 RUN /update-certs-runner.sh ${CUSTOM_CRT_URL} \
     && chsh -s /bin/bash jboss \
     && /server-setup.sh /docker-server.env \
+    && /app-setup.sh /docker-app.env \
     && rm -rf /opt/jboss/wildfly/standalone/configuration/standalone_xml_history
 ENTRYPOINT ["/docker-entrypoint.sh"]
 ENV ORACLE_DRIVER_PATH=$ORACLE_DRIVER_PATH
