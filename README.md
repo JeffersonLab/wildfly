@@ -42,6 +42,7 @@ Only needs to be executed once per permanent installation of Wildfly.
 | WILDFLY_RUN_USER    | User for running Wildfly                                     | 
 | WILDFLY_USER        | Admin username (if empty no admin user is created)           |
 
+**Note**: There is a self-signed test certificate installed, but you can override with your own cert by mounting a custom PKS12 keystore file to `/opt/jboss/wildfly/standalone/configuration/server.p12`  
 
 ### App Setup 
 Must be executed once per app installed in Wildfly.
