@@ -11,6 +11,15 @@ WORKDIR /
 COPY . /app
 RUN /app/scripts/update-certs-builder.sh ${CUSTOM_CRT_URL}
 
+RUN cd /tmp \
+    ##&&  apk add openssl \
+    && openssl genrsa -out localhost.key 2048 \
+    && openssl req -key localhost.key -new -out localhost.csr -subj "/C=US/ST=Virginia/O=localhost dev/OU=IT Department/CN=localhost" \
+    && openssl x509 -signkey localhost.key -in localhost.csr -req -days 99999 -out localhost.crt \
+    && openssl pkcs12 -export -in localhost.crt -inkey localhost.key -name localhost -password pass:changeit > localhost.p12 \
+    && keytool -importkeystore -srckeystore localhost.p12 -destkeystore server.p12 -srcstoretype pkcs12 -alias localhost -deststorepass changeit -srcstorepass changeit
+
+
 ## Let's minimize layers in final-product by organizing files into a single copy structure
 RUN mkdir /unicopy \
     && cp /app/config/docker-server.env /unicopy \
@@ -29,6 +38,7 @@ ARG RUN_USER=jboss:jboss
 ARG ORACLE_DRIVER_PATH
 USER root
 COPY --from=builder /unicopy /
+COPY --from=builder /tmp/server.p12 /opt/jboss/wildfly/standalone/configuration
 RUN /update-certs-runner.sh ${CUSTOM_CRT_URL} \
     && chsh -s /bin/bash jboss \
     && /server-setup.sh /docker-server.env \
