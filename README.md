@@ -53,7 +53,7 @@ Must be executed once per app installed in Wildfly.
 | KEYCLOAK_RESOURCE   | Keycloak resource to configure                                           | YES                 |
 | KEYCLOAK_SECRET     | Keycloak Secret                                                          | YES                 |
 | KEYCLOAK_SERVER_URL | Scheme, host name, and port of Keycloak authentication server            | YES                 |
-| KEYCLOAK_WAR        | Name of war file to secure with Keycloak (app key)                       | YES                 |
+| KEYCLOAK_WAR        | Name of war file to secure with Keycloak (app key)                       | NO                  |
 | ORACLE_DATASOURCE   | Name of Oracle datasource (app key)                                      | NO                  |
 | ORACLE_SERVER       | Host name and port of Oracle server to use to connect to DB from Wildfly | NO                  |
 | ORACLE_SERVICE      | Oracle Service name to use to connect to DB from Wildfly                 | NO                  |
