@@ -27,12 +27,19 @@ Only needs to be executed once per permanent installation of Wildfly.
 
 | Name                | Description                                                  |
 |---------------------|--------------------------------------------------------------|
+| ACCESS_LOG          | If defined, enable access logging                            |
+| ADD_JBOSS_MODULES   | JBoss Modules to install, if any                             |
+| APPLY_ELTRON_PATCH  | If defined, apply [patch](https://github.com/slominskir/wildfly-elytron/releases/tag/v1.19.1.Patch1) |
 | EMAIL_FROM          | Default from address for the mail/jlab resource              |
 | EMAIL_HOST          | Host for the mail/jlab resource                              |
 | EMAIL_PORT          | Port for the mail/jlab resource                              |
-| ORACLE_DRIVER_PATH  | Path to ORACLE Driver (see Dockerfile-weblib for docker env) |
+| GZIP                | If defined, enable gzip                                      |
+| KEYSTORE_NAME       | If defined, set TLS keystore name (file must be inside configuration dir and of type PKS12) |
+| KEYSTORE_PASS       | Keystore password                                            |
+| ORACLE_DRIVER_URL   | Path to ORACLE Driver for Wildfly to use                     |
 | WILDFLY_HOME        | Path to Wildfly home dir                                     | 
 | WILDFLY_PASS        | Admin password (if empty no admin user is created)           |
+| WILDFLY_RUN_USER    | User for running Wildfly                                     | 
 | WILDFLY_USER        | Admin username (if empty no admin user is created)           |
 
 
