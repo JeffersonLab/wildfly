@@ -39,19 +39,20 @@ Only needs to be executed once per permanent installation of Wildfly.
 ### App Setup 
 Must be executed once per app installed in Wildfly.
 
-| Name                | Description                                                              |
-|---------------------|--------------------------------------------------------------------------|
-| KEYCLOAK_REALM      | Keycloak realm to configure                                              |
-| KEYCLOAK_RESOURCE   | Keycloak resource to configure                                           |
-| KEYCLOAK_SECRET     | Keycloak Secret                                                          |
-| KEYCLOAK_SERVER_URL | Scheme, host name, and port of Keycloak authentication server            |
-| KEYCLOAK_WAR        | Name of war file to secure with Keycloak (app key)                       |
-| ORACLE_DATASOURCE   | Name of Oracle datasource (app key)                                      |
-| ORACLE_SERVER       | Host name and port of Oracle server to use to connect to DB from Wildfly |
-| ORACLE_SERVICE      | Oracle Service name to use to connect to DB from Wildfly                 |
-| ORACLE_USER         | Username to use to connect to DB from Wildfly                            |
-| ORACLE_PASS         | Password to use to connect to DB from Wildfly                            |
-| WILDFLY_HOME        | Path to Wildfly home dir                                                 | 
+| Name                | Description                                                              | Runtime Overridable |
+|---------------------|--------------------------------------------------------------------------|---------------------|
+| KEYCLOAK_REALM      | Keycloak realm to configure                                              | YES                 |           
+| KEYCLOAK_RESOURCE   | Keycloak resource to configure                                           | YES                 |
+| KEYCLOAK_SECRET     | Keycloak Secret                                                          | YES                 |
+| KEYCLOAK_SERVER_URL | Scheme, host name, and port of Keycloak authentication server            | YES                 |
+| KEYCLOAK_WAR        | Name of war file to secure with Keycloak (app key)                       | YES                 |
+| ORACLE_DATASOURCE   | Name of Oracle datasource (app key)                                      | NO                  |
+| ORACLE_SERVER       | Host name and port of Oracle server to use to connect to DB from Wildfly | NO                  |
+| ORACLE_SERVICE      | Oracle Service name to use to connect to DB from Wildfly                 | NO                  |
+| ORACLE_USER         | Username to use to connect to DB from Wildfly                            | NO                  |
+| ORACLE_PASS         | Password to use to connect to DB from Wildfly                            | NO                  |
+| WILDFLY_HOME        | Path to Wildfly home dir                                                 | NO                  |
+| WILDFLY_RUN_USER    | User for running Wildfly                                                 | NO                  |
 
 **Note**: As an alternative to the bash scripts The docker image configures Wildfly for use in the compose environment and that's a good starting point to copy from.  Outside of a compose environment you may need to tweak the standalone.xml configuration to use different host names and ports (For example Oracle and Keycloak host names would need to be updated to localhost:1521 and localhost:8081 respectively when using the deps.yml and running Wildfly outside the compose network):
 
