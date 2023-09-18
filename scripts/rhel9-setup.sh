@@ -117,7 +117,7 @@ fi
 EOF
 chmod +x /root/delete-old-wildfly-logs.sh
 cat > /etc/cron.d/delete-old-wildfly-logs.cron << EOF
-0 0 * * * /root/delete-old-wildfly-logs.sh >/dev/null 2>&1
+0 0 * * * wildfly /root/delete-old-wildfly-logs.sh >/dev/null 2>&1
 EOF
 }
 
