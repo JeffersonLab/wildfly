@@ -6,12 +6,16 @@ VARIABLES=(DOWNLOAD_URL
 
 if [[ $# -eq 0 ]] ; then
     echo "Usage: $0 [var file] <GitHub tag/version>"
-    echo "The var file arg should be the path to a file with bash variables that will be sourced."
+    echo "The var file arg should be the path to a file relative to this script containing bash variables that will be sourced."
     printf '\n'
     exit 0
 fi
 
-if [ ! -z "$1" ] && [ -f "$1" ]
+MYPATH="$(readlink -f "$0")"
+MYDIR="${MYPATH%/*}"
+ENV_FILE=$MYDIR/$1
+
+if [ ! -z "$1" ] && [ -f "$ENV_FILE" ]
 then
 echo "Loading environment $1"
 
@@ -23,7 +27,7 @@ fi
 
 TAG=$2
 
-. $1
+. $ENV_FILE
 fi
 
 
