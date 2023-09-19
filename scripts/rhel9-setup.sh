@@ -109,15 +109,15 @@ systemctl enable wildfly
 }
 
 create_log_file_cleanup_cron() {
-cat > /root/delete-old-wildfly-logs.sh << EOF
+cat > /opt/wildfly/delete-old-wildfly-logs.sh << EOF
 #!/bin/sh
 if [ -d ${WILDFLY_USER_HOME}/log ] ; then
  /usr/bin/find ${WILDFLY_USER_HOME}/log/ -mtime +30 -exec /usr/bin/rm {} \;
 fi
 EOF
-chmod +x /root/delete-old-wildfly-logs.sh
+chmod +x /opt/wildfly/delete-old-wildfly-logs.sh
 cat > /etc/cron.d/delete-old-wildfly-logs.cron << EOF
-0 0 * * * wildfly /root/delete-old-wildfly-logs.sh >/dev/null 2>&1
+0 0 * * * wildfly /opt/wildfly/delete-old-wildfly-logs.sh >/dev/null 2>&1
 EOF
 }
 
