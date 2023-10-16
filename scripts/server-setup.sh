@@ -126,6 +126,16 @@ else
   /subsystem=elytron/server-ssl-context=httpsSSC:add(key-manager=httpsKM,protocols=["TLSv1.2"])
   /subsystem=undertow/server=default-server/https-listener=https:undefine-attribute(name=security-realm)
   /subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=ssl-context,value=httpsSSC)
+  run-batch
+EOF
+fi
+
+if [[ -z "${ENABLE_MANAGEMENT_HTTPS}" ]]; then
+  echo "Skipping config management ssl because ENABLE_MANAGEMENT_HTTPS undefined"
+  return 0
+else
+  ${WILDFLY_CLI_PATH} -c <<EOF
+  batch
   /core-service=management/management-interface=http-interface:write-attribute(name=ssl-context,value=httpsSSC)
   /core-service=management/management-interface=http-interface:write-attribute(name=secure-socket-binding, value=management-https)
   run-batch
