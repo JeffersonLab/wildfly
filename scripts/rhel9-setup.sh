@@ -100,7 +100,7 @@ Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
 User=${WILDFLY_USER}
 LimitNOFILE=102642
 PIDFile=/run/wildfly.pid
-ExecStart=${WILDFLY_USER_HOME}/current/bin/standalone.sh -b ${WILDFLY_BIND_ADDRESS} -Djboss.https.port=${WILDFLY_HTTPS_PORT}
+ExecStart=${WILDFLY_USER_HOME}/current/bin/standalone.sh -b ${WILDFLY_BIND_ADDRESS} -bmanagement ${WILDFLY_BIND_ADDRESS} -Djboss.https.port=${WILDFLY_HTTPS_PORT}
 StandardOutput=null
 [Install]
 WantedBy=multi-user.target
