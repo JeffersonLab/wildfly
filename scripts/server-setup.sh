@@ -3,6 +3,7 @@
 FUNCTIONS=(apply_elytron_patch
            wildfly_start_and_wait
            config_oracle_driver
+           config_mariadb_driver
            config_access_log
            config_admin_user
            config_ssl
@@ -55,6 +56,8 @@ done
 # - EMAIL_PORT
 # - ORACLE_DRIVER_PATH
 # - ORACLE_DRIVER_URL
+# - MARIADB_DRIVER_PATH
+# - MARIADB_DRIVER_URL
 # - WILDFLY_USER
 # - WILDFLY_PASS
 # - WILDFLY_SKIP_START
@@ -92,6 +95,24 @@ ${WILDFLY_CLI_PATH} -c <<EOF
 batch
 module add --name=com.oracle.database.jdbc --resources=${ORACLE_DRIVER_PATH} --dependencies=javax.api,javax.transaction.api
 /subsystem=datasources/jdbc-driver=oracle:add(driver-name=oracle,driver-module-name=com.oracle.database.jdbc)
+run-batch
+EOF
+}
+
+config_mariadb_driver() {
+echo "Configuring mariadb_driver"
+if [[ -z "${MARIADB_DRIVER_PATH}" ]]; then
+    echo "Skipping MariaDB Driver Setup: Must provide MARIADB_DRIVER_PATH in environment"
+    return 0
+fi
+
+echo wget -O "${MARIADB_DRIVER_PATH}" "${MARIADB_DRIVER_URL}"
+wget -O "${MARIADB_DRIVER_PATH}" "${MARIADB_DRIVER_URL}"
+
+${WILDFLY_CLI_PATH} -c <<EOF
+batch
+module add --name=org.mariadb.jdbc --resources=${MARIADB_DRIVER_PATH} --dependencies=javax.api,javax.transaction.api
+/subsystem=datasources/jdbc-driver=mariadb:add(driver-name=mariadb,driver-module-name=org.mariadb.jdbc)
 run-batch
 EOF
 }

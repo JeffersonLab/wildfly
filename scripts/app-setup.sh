@@ -3,6 +3,7 @@
 FUNCTIONS=(wildfly_start_and_wait
            config_keycloak_client
            config_oracle_client
+           config_mariadb_client
            wildfly_reload
            wildfly_stop)
 
@@ -44,6 +45,11 @@ done
 # - ORACLE_SERVER
 # - ORACLE_SERVICE
 # - ORACLE_USER
+# - MARIADB_DATASOURCE
+# - MARIADB_PASS
+# - MARIADB_SERVER
+# - MARIADB_DB_NAME
+# - MARIADB_USER
 # - WILDFLY_SKIP_START
 # - WILDFLY_SKIP_STOP
 
@@ -97,6 +103,19 @@ fi
 ${WILDFLY_CLI_PATH} -c <<EOF
 batch
 data-source add --name=jdbc/${ORACLE_DATASOURCE} --driver-name=oracle --jndi-name=java:/jdbc/${ORACLE_DATASOURCE} --connection-url=jdbc:oracle:thin:@//${ORACLE_SERVER}/${ORACLE_SERVICE} --user-name=${ORACLE_USER} --password=${ORACLE_PASS} --max-pool-size=3 --min-pool-size=1 --flush-strategy=EntirePool --use-fast-fail=true --blocking-timeout-wait-millis=5000 --query-timeout=30 --idle-timeout-minutes=5 --background-validation=true --background-validation-millis=30000 --validate-on-match=false --check-valid-connection-sql="select 1 from dual" --prepared-statements-cache-size=10 --share-prepared-statements=true
+run-batch
+EOF
+}
+
+config_mariadb_client() {
+if [[ -z "${MARIADB_DATASOURCE}" ]]; then
+  echo "Skipping config_mariadb_client because MARIADB_DATASOURCE undefined"
+  return 0
+fi
+
+${WILDFLY_CLI_PATH} -c <<EOF
+batch
+data-source add --name=jdbc/${MARIADB_DATASOURCE} --driver-name=mariadb --jndi-name=java:/jdbc/${MARIADB_DATASOURCE} --connection-url=jdbc:mariadb://${MARIADB_SERVER}/${MARIADB_DB_NAME} --user-name=${MARIADB_USER} --password=${MARIADB_PASS} --max-pool-size=3 --min-pool-size=1 --flush-strategy=EntirePool --use-fast-fail=true --blocking-timeout-wait-millis=5000 --query-timeout=30 --idle-timeout-minutes=5 --background-validation=true --background-validation-millis=30000 --validate-on-match=false --check-valid-connection-sql="select 1 from dual" --prepared-statements-cache-size=10 --share-prepared-statements=true
 run-batch
 EOF
 }
