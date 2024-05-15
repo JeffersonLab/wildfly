@@ -98,5 +98,7 @@ These environment variables are Docker specific and are used by the [docker-entr
 **Note**: The entrypoint script waits for either an Oracle or a MariaDB database to start but not both.  Oracle takes precedence.
 
 ## Release
-1. Create a new release on the GitHub Releases page.  The release should enumerate changes and link issues.
-2. Build and publish a new Docker image [from the GitHub tag](https://gist.github.com/slominskir/a7da801e8259f5974c978f9c3091d52c#8-build-an-image-based-of-github-tag). GitHub is configured to do this automatically on git push of semver tag (typically part of GitHub release) or the [Publish to DockerHub](https://github.com/JeffersonLab/wildfly/actions/workflows/docker-publish.yml) action can be manually triggered after selecting a tag.
+1. Bump the version number in the VERSION file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
+2. The [CD](https://github.com/JeffersonLab/wildfly/blob/main/.github/workflows/cd.yml) GitHub Action should run automatically invoking:
+    - The [Create release](https://github.com/JeffersonLab/container-workflows/blob/main/.github/workflows/gh-release.yml) GitHub Action to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
+    - The [Publish docker image](https://github.com/JeffersonLab/container-workflows/blob/main/.github/workflows/docker-publish.yml) GitHub Action to create a new demo Docker image, and bump the [compose.override.yaml](https://github.com/JeffersonLab/wildfly/blob/main/compose.override.yaml) to use the new image.

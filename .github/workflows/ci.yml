@@ -3,6 +3,10 @@ name: CI
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'VERSION'
+    tags-ignore:
+      - "v*.*.*"
   pull_request:
     branches: [ main ]
   workflow_dispatch:
