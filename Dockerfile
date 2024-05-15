@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG BUILD_IMAGE=gradle:7.4-jdk17
 ARG RUN_IMAGE=quay.io/wildfly/wildfly:26.1.3.Final-jdk17
 ARG ORACLE_DRIVER_PATH=/ojdbc11-21.7.0.0.jar
