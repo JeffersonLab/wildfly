@@ -94,6 +94,14 @@ run-batch
 EOF
 }
 
+config_oracle_client_dynamic() {
+${WILDFLY_CLI_PATH} -c <<EOF
+batch
+data-source add --name=jdbc/${ORACLE_DATASOURCE} --driver-name=oracle --jndi-name=java:/jdbc/${ORACLE_DATASOURCE} --connection-url=jdbc:oracle:thin:@//\${env.ORACLE_SERVER:${ORACLE_SERVER}}/\${env.ORACLE_SERVICE:${ORACLE_SERVICE}} --user-name=\${env.ORACLE_USER:${ORACLE_USER}} --password=\${env.ORACLE_PASS:${ORACLE_PASS}} --max-pool-size=3 --min-pool-size=1 --flush-strategy=EntirePool --use-fast-fail=true --blocking-timeout-wait-millis=5000 --query-timeout=30 --idle-timeout-minutes=5 --background-validation=true --background-validation-millis=30000 --validate-on-match=false --check-valid-connection-sql="select 1 from dual" --prepared-statements-cache-size=10 --share-prepared-statements=true
+run-batch
+EOF
+}
+
 config_oracle_client() {
 if [[ -z "${ORACLE_DATASOURCE}" ]]; then
   echo "Skipping config_oracle_client because ORACLE_DATASOURCE undefined"
