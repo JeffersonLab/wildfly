@@ -1,0 +1,3 @@
+services:
+  keycloak:
+    image: jeffersonlab/wildfly:1.5.0

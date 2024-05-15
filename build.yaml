@@ -1,0 +1,8 @@
+services:
+  wildfly:
+    extends:
+      file: compose.yaml
+      service: wildfly
+    build:
+      context: .
+      dockerfile: Dockerfile
