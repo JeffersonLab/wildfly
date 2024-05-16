@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - README.md
-      - .github/workflows/dd.yml
+      - .github/workflows/dd.yaml
 jobs:
   description:
     uses: jeffersonlab/container-workflows/.github/workflows/docker-description.yaml@v2
