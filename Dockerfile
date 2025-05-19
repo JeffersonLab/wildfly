@@ -27,8 +27,7 @@ RUN mkdir /unicopy \
     && cp /app/config/docker-server.env /unicopy \
     && cp /app/scripts/TestOracleConnection.java /unicopy \
     && cp /app/scripts/TestMariadbConnection.java /unicopy \
-    && cp /app/scripts/container-entrypoint.sh /unicopy \
-    && cp /app/scripts/container-healthcheck.sh /unicopy \
+    && cp /app/scripts/docker-entrypoint.sh /unicopy \
     && cp /app/scripts/server-setup.sh /unicopy \
     && cp /app/scripts/provided-setup.sh /unicopy \
     && cp /app/scripts/app-setup.sh /unicopy \
@@ -47,7 +46,7 @@ RUN /update-certs-runner.sh ${CUSTOM_CRT_URL} \
     && chsh -s /bin/bash jboss \
     && /server-setup.sh /docker-server.env \
     && rm -rf /opt/jboss/wildfly/standalone/configuration/standalone_xml_history
-ENTRYPOINT ["/container-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 ENV ORACLE_DRIVER_PATH=$ORACLE_DRIVER_PATH
 ENV MARIADB_DRIVER_PATH=$MARIADB_DRIVER_PATH
 USER ${RUN_USER}

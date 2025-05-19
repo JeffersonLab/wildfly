@@ -72,7 +72,7 @@ if [[ ! -z "${WILDFLY_SKIP_START}" ]]; then
   return 0
 fi
 
-su ${WILDFLY_RUN_USER} -c "${WILDFLY_APP_HOME}/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &"
+su -s /bin/sh ${WILDFLY_RUN_USER} -c "${WILDFLY_APP_HOME}/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &"
 
 until curl http://localhost:8080 -sf -o /dev/null;
 do
