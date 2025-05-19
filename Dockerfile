@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 ARG BUILD_IMAGE=gradle:7.4-jdk17
-ARG RUN_IMAGE=quay.io/wildfly/wildfly:26.1.3.Final-jdk17
+ARG RUN_IMAGE=quay.io/wildfly/wildfly:36.0.1.Final-jdk17
 ARG ORACLE_DRIVER_PATH=/ojdbc11-21.7.0.0.jar
 ARG MARIADB_DRIVER_PATH=/mariadb-java-client-3.3.3.jar
 ARG CUSTOM_CRT_URL="https://ace.jlab.org/acc-ca.crt http://pki.jlab.org/JLabCA.crt"
 
 ################## Stage 0
-FROM ${BUILD_IMAGE} as builder
+FROM ${BUILD_IMAGE} AS builder
 ARG CUSTOM_CRT_URL
 USER root
 WORKDIR /
@@ -27,26 +27,26 @@ RUN mkdir /unicopy \
     && cp /app/config/docker-server.env /unicopy \
     && cp /app/scripts/TestOracleConnection.java /unicopy \
     && cp /app/scripts/TestMariadbConnection.java /unicopy \
-    && cp /app/scripts/docker-entrypoint.sh /unicopy \
+    && cp /app/scripts/container-entrypoint.sh /unicopy \
+    && cp /app/scripts/container-healthcheck.sh /unicopy \
     && cp /app/scripts/server-setup.sh /unicopy \
     && cp /app/scripts/provided-setup.sh /unicopy \
     && cp /app/scripts/app-setup.sh /unicopy \
     && cp /app/scripts/update-certs-runner.sh /unicopy
 
 ################## Stage 1
-FROM ${RUN_IMAGE} as runner
+FROM ${RUN_IMAGE} AS runner
 ARG CUSTOM_CRT_URL
-ARG RUN_USER=jboss:jboss
+ARG RUN_USER=jboss
 ARG ORACLE_DRIVER_PATH
 ARG MARIADB_DRIVER_PATH
 USER root
 COPY --from=builder /unicopy /
 COPY --from=builder /tmp/server.p12 /opt/jboss/wildfly/standalone/configuration
 RUN /update-certs-runner.sh ${CUSTOM_CRT_URL} \
-    && chsh -s /bin/bash jboss \
     && /server-setup.sh /docker-server.env \
     && rm -rf /opt/jboss/wildfly/standalone/configuration/standalone_xml_history
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/container-entrypoint.sh"]
 ENV ORACLE_DRIVER_PATH=$ORACLE_DRIVER_PATH
 ENV MARIADB_DRIVER_PATH=$MARIADB_DRIVER_PATH
 USER ${RUN_USER}
