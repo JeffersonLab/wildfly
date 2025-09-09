@@ -14,7 +14,7 @@ COPY . /app
 RUN /app/scripts/update-certs-builder.sh ${CUSTOM_CRT_URL}
 
 RUN cd /tmp \
-    ##&&  apk add openssl \
+    &&  apt install curl -y \
     && openssl genrsa -out localhost.key 2048 \
     && openssl req -key localhost.key -new -out localhost.csr -subj "/C=US/ST=Virginia/O=localhost dev/OU=IT Department/CN=localhost" \
     && openssl x509 -signkey localhost.key -in localhost.csr -req -days 99999 -out localhost.crt \

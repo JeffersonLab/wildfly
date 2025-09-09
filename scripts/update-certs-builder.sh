@@ -12,7 +12,7 @@ for cert in $CUSTOM_CRT_URL
 do
   echo Downloading "$cert"
   name=$(echo "$cert" | rev | cut -f1 -d"/" | rev | cut -f1 -d'.') || exit 1
-  wget -O "/usr/local/share/ca-certificates/custom-${name}.crt" "$cert" || exit 1
+  curl -sS -o "/usr/local/share/ca-certificates/custom-${name}.crt" "$cert" || exit 1
 done
 
 update-ca-certificates || exit 1
