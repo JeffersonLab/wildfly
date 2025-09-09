@@ -1,7 +1,7 @@
 #!/bin/bash
 
-FUNCTIONS=(allow_elytron_url_params
-           wildfly_start_and_wait
+FUNCTIONS=(wildfly_start_and_wait
+           allow_elytron_url_params
            config_oracle_driver
            config_mariadb_driver
            config_access_log
