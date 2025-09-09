@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FUNCTIONS=(apply_elytron_patch
+FUNCTIONS=(allow_elytron_url_params
            wildfly_start_and_wait
            config_oracle_driver
            config_mariadb_driver
@@ -117,13 +117,12 @@ run-batch
 EOF
 }
 
-apply_elytron_patch() {
-if [[ -z "${APPLY_ELYTRON_PATCH}" ]]; then
-  echo "Skipping elytron patch because APPLY_ELYTRON_PATCH undefined"
-  return 0
-fi
-# https://github.com/slominskir/wildfly-elytron/releases/tag/v1.19.1.Patch1
-wget -O "${WILDFLY_APP_HOME}/modules/system/layers/base/org/wildfly/security/elytron-http-oidc/main/wildfly-elytron-http-oidc-1.19.1.Final.jar" https://github.com/slominskir/wildfly-elytron/releases/download/v1.19.1.Patch1/wildfly-elytron-http-oidc-1.19.1.Final.jar
+allow_elytron_url_params() {
+${WILDFLY_CLI_PATH} -c <<EOF
+batch
+/system-property=wildfly.elytron.oidc.allow.query.params:add(value=true)
+run-batch
+EOF
 }
 
 config_admin_user() {
