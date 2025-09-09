@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
-ARG BUILD_IMAGE=gradle:7.4-jdk17
-ARG RUN_IMAGE=quay.io/wildfly/wildfly:36.0.1.Final-jdk17
-ARG ORACLE_DRIVER_PATH=/ojdbc11-21.7.0.0.jar
+ARG BUILD_IMAGE=gradle:9-jdk21
+ARG RUN_IMAGE=quay.io/wildfly/wildfly:37.0.1.Final-jdk21
+ARG ORACLE_DRIVER_PATH=/ojdbc17-23.9.0.25.07
 ARG MARIADB_DRIVER_PATH=/mariadb-java-client-3.3.3.jar
 ARG CUSTOM_CRT_URL="https://ace.jlab.org/acc-ca.crt http://pki.jlab.org/JLabCA.crt"
 

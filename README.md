@@ -8,7 +8,7 @@ Configurable [Wildfly](https://www.wildfly.org/) base Docker image and bash setu
 ---
 
 ## Overview
-This Jefferson Lab Wildfly template assumes apps are authenticated with [Keycloak](https://www.keycloak.org/) and use an Oracle or MariaDB database.  It is generally expected that only one database will be configured at a time.  Optionally an SMTP mail server can be configured.   The full EE Wildfly distribution is used as a starting point and a few libraries are added including:
+This Jefferson Lab Wildfly template for Wildfly 37.0.1 assumes apps are authenticated with [Keycloak](https://www.keycloak.org/) and use an Oracle or MariaDB database.  It is generally expected that only one database will be configured at a time.  Optionally an SMTP mail server can be configured.   The full EE Wildfly distribution is used as a starting point and a few libraries are added including:
 
  - JLog: JLab logbook client
  - Keycloak admin client
