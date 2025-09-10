@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FUNCTIONS=(remove_java_11
+FUNCTIONS=(adjust_java
            create_user_and_group
            download
            unzip_and_chmod
@@ -19,7 +19,7 @@ VARIABLES=(WILDFLY_BIND_ADDRESS
            WILDFLY_VERSION
            JDK_HOME
            JDK_MAX_HEAP
-           JDK_MAX_META)
+           JDK_MIN_HEAP)
 
 if [[ $# -eq 0 ]] ; then
     echo "Usage: $0 [var file] <optional function>"
@@ -48,10 +48,10 @@ done
 
 WILDFLY_APP_HOME=${WILDFLY_USER_HOME}/${WILDFLY_VERSION}
 
-remove_java_11() {
-# We're assuming this leaves only JDK17
+adjust_java() {
+yum install java-21-openjdk -y
 yum remove java-11-openjdk-headless -y
-alternatives --auto java
+yum remove java-17-openjdk-headless -y
 }
 
 create_user_and_group() {
@@ -79,7 +79,7 @@ ln -s current/standalone/log log
 
 adjust_jvm_options() {
 sed -i "s|#JAVA_HOME=\"/opt/java/jdk\"|JAVA_HOME=\"${JDK_HOME}\"|g" ${WILDFLY_APP_HOME}/bin/standalone.conf
-sed -i "s/MaxMetaspaceSize=256m/MaxMetaspaceSize=${JDK_MAX_META}/g" ${WILDFLY_APP_HOME}/bin/standalone.conf
+sed -i "s/Xms64m/Xms${JDK_MIN_HEAP}/g" ${WILDFLY_APP_HOME}/bin/standalone.conf
 sed -i "s/Xmx512m/Xmx${JDK_MAX_HEAP}/g" ${WILDFLY_APP_HOME}/bin/standalone.conf
 }
 
