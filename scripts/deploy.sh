@@ -14,6 +14,7 @@ fi
 MYPATH="$(readlink -f "$0")"
 MYDIR="${MYPATH%/*}"
 ENV_FILE=$MYDIR/$1
+USER_TEMP=/tmp/`whoami`
 
 if [ ! -z "$1" ] && [ -f "$ENV_FILE" ]
 then
@@ -26,6 +27,10 @@ exit 0
 fi
 
 TAG=$2
+
+if [[ $TAG != 'v'* ]]; then
+TAG=v$TAG
+fi
 
 . $ENV_FILE
 fi
@@ -40,10 +45,11 @@ done
 WILDFLY_CLI_PATH=${WILDFLY_APP_HOME}/bin/jboss-cli.sh
 
 deploy() {
-cd /tmp
-rm -rf /tmp/${WAR_FILE}
+mkdir -p ${USER_TEMP}
+cd ${USER_TEMP}
+rm -rf ${USER_TEMP}/${WAR_FILE}
 wget ${DOWNLOAD_URL}
-${WILDFLY_CLI_PATH} -c "deploy --force /tmp/${WAR_FILE}"
+${WILDFLY_CLI_PATH} -c "deploy --force ${USER_TEMP}/${WAR_FILE}"
 }
 
 deploy
