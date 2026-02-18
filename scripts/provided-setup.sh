@@ -45,7 +45,7 @@ IFS=","
 read -a resources <<<"${RESOURCES_CSV}"
 for x in "${resources[@]}" ;do
     #echo "> [$x]"
-    wget -nv ${x}
+    curl -L -O ${x}
     LOCAL_RESOURCES+=(/tmp/`basename "${x}"`)
 done
 

@@ -89,7 +89,7 @@ if [[ -z "${ORACLE_DRIVER_PATH}" ]]; then
     return 0
 fi
 
-wget -O "${ORACLE_DRIVER_PATH}" "${ORACLE_DRIVER_URL}"
+curl -L -o "${ORACLE_DRIVER_PATH}" "${ORACLE_DRIVER_URL}"
 
 ${WILDFLY_CLI_PATH} -c <<EOF
 batch
@@ -106,8 +106,8 @@ if [[ -z "${MARIADB_DRIVER_PATH}" ]]; then
     return 0
 fi
 
-echo wget -O "${MARIADB_DRIVER_PATH}" "${MARIADB_DRIVER_URL}"
-wget -O "${MARIADB_DRIVER_PATH}" "${MARIADB_DRIVER_URL}"
+#echo curl -L -o "${MARIADB_DRIVER_PATH}" "${MARIADB_DRIVER_URL}"
+curl -L -o "${MARIADB_DRIVER_PATH}" "${MARIADB_DRIVER_URL}"
 
 ${WILDFLY_CLI_PATH} -c <<EOF
 batch

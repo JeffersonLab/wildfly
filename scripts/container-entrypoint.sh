@@ -33,7 +33,7 @@ echo "----------------------------"
 echo "| Step 2: Starting Wildfly |"
 echo "----------------------------"
 
-/opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
+/opt/wildfly/current/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
 
 until curl http://localhost:8080 -sf -o /dev/null;
 do
