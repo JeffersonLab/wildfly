@@ -1,18 +1,14 @@
 #!/bin/bash
 
-FUNCTIONS=(create_user_and_group
-           download
+FUNCTIONS=(download
            unzip_and_chmod
            create_symbolic_links
            adjust_jvm_options)
 
 VARIABLES=(WILDFLY_BIND_ADDRESS
-           WILDFLY_GROUP
-           WILDFLY_GROUP_ID
            WILDFLY_HTTPS_PORT
            WILDFLY_USER
            WILDFLY_USER_HOME
-           WILDFLY_USER_ID
            WILDFLY_VERSION
            JDK_HOME
            JDK_MAX_HEAP
@@ -45,14 +41,9 @@ done
 
 WILDFLY_APP_HOME=${WILDFLY_USER_HOME}/${WILDFLY_VERSION}
 
-create_user_and_group() {
-groupadd -r -g ${WILDFLY_GROUP_ID} ${WILDFLY_GROUP}
-useradd -r -m -u ${WILDFLY_USER_ID} -g ${WILDFLY_GROUP_ID} -d ${WILDFLY_USER_HOME} -s /bin/bash ${WILDFLY_USER}
-}
-
 download() {
 cd /tmp
-wget https://github.com/wildfly/wildfly/releases/download/${WILDFLY_VERSION}/wildfly-${WILDFLY_VERSION}.zip
+curl -L -O https://github.com/wildfly/wildfly/releases/download/${WILDFLY_VERSION}/wildfly-${WILDFLY_VERSION}.zip
 }
 
 unzip_and_chmod() {
