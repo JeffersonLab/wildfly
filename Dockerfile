@@ -39,7 +39,7 @@ RUN mkdir /unicopy \
 ################## Stage 1
 FROM ${RUN_IMAGE} AS runner
 ARG CUSTOM_CRT_URL
-ARG RUN_USER=wildfly
+ARG RUN_USER=dev
 ARG ORACLE_DRIVER_PATH
 ARG MARIADB_DRIVER_PATH
 USER root
