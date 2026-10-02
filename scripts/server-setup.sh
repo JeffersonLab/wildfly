@@ -8,6 +8,7 @@ FUNCTIONS=(wildfly_start_and_wait
            config_admin_user
            config_ssl
            config_gzip
+           config_samesite_cookie
            config_email
            config_persist_sessions_on_redeploy
            config_param_limits
@@ -51,6 +52,7 @@ done
 # - KEYSTORE_NAME
 # - KEYSTORE_PASS
 # - PERSISTENT_SESSIONS
+# - SAMESITE_COOKIE
 # - EMAIL_FROM
 # - EMAIL_HOST
 # - EMAIL_PORT
@@ -199,6 +201,26 @@ ${WILDFLY_CLI_PATH} -c <<EOF
 batch
 /subsystem=undertow/configuration=filter/gzip=gzipFilter:add()
 /subsystem=undertow/server=default-server/host=default-host/filter-ref=gzipFilter:add()
+run-batch
+EOF
+}
+
+config_samesite_cookie() {
+if [[ -z "${SAMESITE_COOKIE}" ]]; then
+  echo "Skipping SameSite cookie config because SAMESITE_COOKIE undefined"
+  return 0
+fi
+
+case "${SAMESITE_COOKIE}" in
+  Strict|Lax|None) ;;
+  *) echo "SAMESITE_COOKIE must be Strict, Lax, or None; found ${SAMESITE_COOKIE}"; return 1 ;;
+esac
+
+# Sets the SameSite attribute of every app's session cookie (JSESSIONID)
+${WILDFLY_CLI_PATH} -c <<EOF
+batch
+/subsystem=undertow/configuration=filter/expression-filter=samesite-cookie:add(expression="samesite-cookie(mode=${SAMESITE_COOKIE}, cookie-pattern=JSESSIONID)")
+/subsystem=undertow/server=default-server/host=default-host/filter-ref=samesite-cookie:add()
 run-batch
 EOF
 }

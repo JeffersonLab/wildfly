@@ -37,6 +37,7 @@ Only needs to be executed once per permanent installation of Wildfly.
 | KEYSTORE_NAME       | If defined, set TLS keystore name (file must be inside configuration dir and of type PKS12)          |
 | KEYSTORE_PASS       | Keystore password                                                                                    |
 | ORACLE_DRIVER_URL   | Path to ORACLE Driver for Wildfly to use                                                             |
+| SAMESITE_COOKIE     | If defined, set the SameSite attribute of every app's session cookie (JSESSIONID): Strict, Lax (recommended), or None |
 | MARIADB_DRIVER_URL  | Path to MariaDB Driver for Wildfly to use                                                            |
 | WILDFLY_HOME        | Path to Wildfly home dir                                                                             | 
 | WILDFLY_PASS        | Admin password (if empty no admin user is created)                                                   |
