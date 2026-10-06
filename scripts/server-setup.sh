@@ -1,6 +1,7 @@
 #!/bin/bash
 
-FUNCTIONS=(wildfly_start_and_wait
+FUNCTIONS=(apply_elytron_patch
+           wildfly_start_and_wait
            allow_elytron_url_params
            config_oracle_driver
            config_mariadb_driver
@@ -117,6 +118,32 @@ module add --name=org.mariadb.jdbc --resources=${MARIADB_DRIVER_PATH} --dependen
 /subsystem=datasources/jdbc-driver=mariadb:add(driver-name=mariadb,driver-module-name=org.mariadb.jdbc)
 run-batch
 EOF
+}
+
+apply_elytron_patch() {
+if [[ -z "${APPLY_ELYTRON_PATCH}" ]]; then
+  echo "Skipping elytron patch because APPLY_ELYTRON_PATCH undefined"
+  return 0
+fi
+# Elytron 2.6.4, in Wildfly 37.0.1, uses a decoded query in the OIDC redirect_uri, so logging in
+# from a page whose URL has encoded characters (such as a date's space and colon) fails with
+# "Incorrect redirect_uri". The patch is in Elytron 2.6.7, which needs other jars too.
+# https://github.com/slominskir/wildfly-elytron/releases/tag/v2.6.4.Patch1
+# https://github.com/JeffersonLab/dtm/issues/73
+local jar="${WILDFLY_APP_HOME}/modules/system/layers/base/org/wildfly/security/elytron-http-oidc/main/wildfly-elytron-http-oidc-2.6.4.Final.jar"
+local url=https://github.com/slominskir/wildfly-elytron/releases/download/v2.6.4.Patch1/wildfly-elytron-http-oidc-2.6.4.Final.jar
+local sha256=e9035f4226028fe5b62b088918414247af49acbd8af6622ac8c47a3bda9052b4
+if [[ ! -f "${jar}" ]]; then
+  echo "Skipping elytron patch because ${jar} not found: the patch is for Elytron 2.6.4 (Wildfly 37.0.1)"
+  return 0
+fi
+curl -fsSL -o /tmp/elytron-patch.jar "${url}" \
+  && echo "${sha256}  /tmp/elytron-patch.jar" | sha256sum -c - \
+  || { echo "Unable to download or verify elytron patch"; exit 1; }
+mv "${jar}" "${jar}.bak"
+mv /tmp/elytron-patch.jar "${jar}"
+chmod 644 "${jar}"
+echo "Applied elytron patch v2.6.4.Patch1"
 }
 
 allow_elytron_url_params() {
