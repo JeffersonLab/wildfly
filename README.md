@@ -29,7 +29,7 @@ Only needs to be executed once per permanent installation of Wildfly.
 |---------------------|------------------------------------------------------------------------------------------------------|
 | ACCESS_LOG          | If defined, enable access logging                                                                    |
 | ADD_JBOSS_MODULES   | JBoss Modules to install, if any                                                                     |
-| APPLY_ELYTRON_PATCH | If defined, apply [patch](https://github.com/slominskir/wildfly-elytron/releases/tag/v1.19.1.Patch1) |
+| APPLY_ELYTRON_PATCH | If defined, replace Elytron 2.6.4's OIDC client with a [patched one](https://github.com/slominskir/wildfly-elytron/releases/tag/v2.6.4.Patch1), checked against its SHA-256, so logging in keeps URL parameters with encoded characters ([dtm#73](https://github.com/JeffersonLab/dtm/issues/73)). Only for Wildfly 37.0.1; skipped if its Elytron jar isn't there. The container image sets it |
 | EMAIL_FROM          | Default from address for the mail/jlab resource                                                      |
 | EMAIL_HOST          | Host for the mail/jlab resource                                                                      |
 | EMAIL_PORT          | Port for the mail/jlab resource                                                                      |
