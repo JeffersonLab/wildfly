@@ -13,12 +13,10 @@ WORKDIR /
 COPY . /app
 RUN /app/scripts/update-certs-builder.sh ${CUSTOM_CRT_URL}
 
+## The public demo localhost key pair, the same in every build so tests can pin its certificate (see README)
 RUN cd /tmp \
     &&  apt install curl -y \
-    && openssl genrsa -out localhost.key 2048 \
-    && openssl req -key localhost.key -new -out localhost.csr -subj "/C=US/ST=Virginia/O=localhost dev/OU=IT Department/CN=localhost" \
-    && openssl x509 -signkey localhost.key -in localhost.csr -req -days 99999 -out localhost.crt \
-    && openssl pkcs12 -export -in localhost.crt -inkey localhost.key -name localhost -password pass:changeit > localhost.p12 \
+    && openssl pkcs12 -export -in /app/config/localhost-demo.crt -inkey /app/config/localhost-demo.key -name localhost -password pass:changeit > localhost.p12 \
     && keytool -importkeystore -srckeystore localhost.p12 -destkeystore server.p12 -srcstoretype pkcs12 -alias localhost -deststorepass changeit -srcstorepass changeit
 
 

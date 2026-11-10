@@ -44,7 +44,7 @@ Only needs to be executed once per permanent installation of Wildfly.
 | WILDFLY_RUN_USER    | User for running Wildfly                                                                             | 
 | WILDFLY_USER        | Admin username (if empty no admin user is created)                                                   |
 
-**Note**: There is a self-signed test certificate installed, but you can override with your own cert by mounting a custom PKS12 keystore file to `/opt/jboss/wildfly/standalone/configuration/server.p12`  
+**Note**: The image serves a self-signed `localhost` demo certificate, [config/localhost-demo.crt](https://github.com/JeffersonLab/wildfly/blob/main/config/localhost-demo.crt), from its keystore `server.p12`. Its private key, [config/localhost-demo.key](https://github.com/JeffersonLab/wildfly/blob/main/config/localhost-demo.key), is public: the pair is for local development and tests only and must never be used on a real host. Every build serves the same certificate, so integration tests can pin it and developers can trust it in their browser once (SHA-256 fingerprint `41:01:9E:C4:7F:4F:6B:80:21:E6:49:49:11:0B:39:3F:9E:4E:65:BE:C2:C2:6E:DA:26:91:76:94:6E:11:19:31`). To serve your own certificate, mount a custom PKCS12 keystore file to `/opt/wildfly/current/standalone/configuration/server.p12`.
 
 ### App Setup 
 Must be executed once per app installed in Wildfly.
