@@ -367,6 +367,34 @@ enable_global_modules() {
   done <<< "${GLOBAL_ENABLE_LIBS}"
 }
 
+# Sets the level of loggers, one per line of LOG_LEVELS: category=LEVEL, such as
+#   org.apache.kafka.clients=ERROR
+# Adds each logger, or changes its level if Wildfly already has it. LEVEL is one Wildfly knows:
+# ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, or OFF, or a java.util.logging level such as FINE.
+# Required: LOG_LEVELS WILDFLY_APP_HOME
+config_log_levels() {
+  _require_vars LOG_LEVELS WILDFLY_APP_HOME || return
+  local line category level logger
+  while read -r line; do
+    [[ -n "${line}" ]] || continue
+    category=${line%%=*}
+    level=${line#*=}
+    if [[ "${line}" != *=* || ! "${category}" =~ ^[[:alnum:]_.$-]+$ || ! "${level}" =~ ^[[:alpha:]]+$ ]]; then
+      _err "Each line of LOG_LEVELS must be category=LEVEL; found ${line}"
+      return 1
+    fi
+    _log "Setting logger ${category} to ${level}"
+    logger="/subsystem=logging/logger=${category}"
+    _cli <<EOF || return
+if (outcome != success) of ${logger}:read-resource
+  ${logger}:add(level=${level})
+else
+  ${logger}:write-attribute(name=level,value=${level})
+end-if
+EOF
+  done <<< "${LOG_LEVELS}"
+}
+
 #### Configure an app (Wildfly must be running)
 
 # Secures KEYCLOAK_WAR with Keycloak (OIDC), using the values as they are now.
