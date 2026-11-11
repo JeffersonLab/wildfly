@@ -232,11 +232,10 @@ EOF
 }
 
 # Adds a management (admin console) user.
-# Required: WILDFLY_USER: the admin user's name (not the OS user, as in the install functions)
-#           WILDFLY_PASS WILDFLY_APP_HOME
+# Required: WILDFLY_ADMIN_USER WILDFLY_ADMIN_PASS WILDFLY_APP_HOME
 config_admin_user() {
-  _require_vars WILDFLY_APP_HOME WILDFLY_PASS WILDFLY_USER || return
-  "${WILDFLY_APP_HOME}/bin/add-user.sh" "${WILDFLY_USER}" "${WILDFLY_PASS}"
+  _require_vars WILDFLY_ADMIN_PASS WILDFLY_ADMIN_USER WILDFLY_APP_HOME || return
+  "${WILDFLY_APP_HOME}/bin/add-user.sh" "${WILDFLY_ADMIN_USER}" "${WILDFLY_ADMIN_PASS}"
 }
 
 # Serves HTTPS with a PKCS12 keystore from the configuration dir.
