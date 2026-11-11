@@ -33,14 +33,7 @@ echo "----------------------------"
 echo "| Step 2: Starting Wildfly |"
 echo "----------------------------"
 
-/opt/wildfly/current/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
-
-until curl http://localhost:8080 -sf -o /dev/null;
-do
-  echo $(date) " Still waiting for Wildfly to start..."
-  sleep 5
-done
-
-echo $(date) " Wildfly started!"
+. /wildfly-lib.sh
+WILDFLY_APP_HOME=${WILDFLY_APP_HOME:-/opt/wildfly/current} wildfly_start_and_wait
 
 sleep infinity
