@@ -28,9 +28,8 @@ RUN mkdir /unicopy \
     && cp /app/scripts/TestMariadbConnection.java /unicopy \
     && cp /app/scripts/container-entrypoint.sh /unicopy \
     && cp /app/scripts/container-healthcheck.sh /unicopy \
-    && cp /app/scripts/devcontainer-setup.sh /unicopy \
+    && cp /app/scripts/wildfly-lib.sh /unicopy \
     && cp /app/scripts/server-setup.sh /unicopy \
-    && cp /app/scripts/provided-setup.sh /unicopy \
     && cp /app/scripts/app-setup.sh /unicopy \
     && cp /app/scripts/update-certs-runner.sh /unicopy
 
@@ -42,10 +41,13 @@ ARG ORACLE_DRIVER_PATH
 ARG MARIADB_DRIVER_PATH
 USER root
 COPY --from=builder /unicopy /
-RUN /devcontainer-setup.sh /docker-host.env
+RUN /wildfly-lib.sh -e /docker-host.env download_wildfly unzip_wildfly create_wildfly_symlinks adjust_jvm_options
 COPY --from=builder /tmp/server.p12 /opt/wildfly/current/standalone/configuration
 RUN /update-certs-runner.sh ${CUSTOM_CRT_URL} \
-    && /server-setup.sh /docker-server.env \
+    && /wildfly-lib.sh -e /docker-server.env apply_elytron_patch wildfly_start_and_wait \
+         allow_elytron_url_params config_oracle_driver config_mariadb_driver config_access_log \
+         config_admin_user config_ssl config_gzip config_samesite_cookie add_jboss_modules config_proxy \
+         wildfly_reload wildfly_stop \
     && rm -rf /opt/wildfly/current/standalone/configuration/standalone_xml_history
 ENTRYPOINT ["/container-entrypoint.sh"]
 ENV ORACLE_DRIVER_PATH=$ORACLE_DRIVER_PATH
