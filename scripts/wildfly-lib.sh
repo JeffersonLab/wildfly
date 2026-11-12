@@ -397,22 +397,44 @@ EOF
 
 #### Configure an app (Wildfly must be running)
 
+# Refuses a KEYCLOAK_VERIFY_AUDIENCE that is neither true nor false, so that a value such as
+# "yes" doesn't leave the check off unnoticed.
+_keycloak_verify_audience() {
+  case "${KEYCLOAK_VERIFY_AUDIENCE:-false}" in
+    true|false) ;;
+    *)
+      _err "${FUNCNAME[1]} needs KEYCLOAK_VERIFY_AUDIENCE to be true or false, not '${KEYCLOAK_VERIFY_AUDIENCE}'"
+      return 1
+      ;;
+  esac
+}
+
 # Secures KEYCLOAK_WAR with Keycloak (OIDC), using the values as they are now.
 # Required: KEYCLOAK_REALM KEYCLOAK_RESOURCE KEYCLOAK_SECRET KEYCLOAK_SERVER_URL KEYCLOAK_WAR WILDFLY_APP_HOME
+# Optional: KEYCLOAK_VERIFY_AUDIENCE: true to take only the bearer tokens whose audience (aud)
+#           names KEYCLOAK_RESOURCE, and not those the realm issues to its other clients. Keycloak
+#           must then put that audience in the tokens meant for the app (an audience mapper).
+#           false or unset: any of the realm's tokens, as before
 config_keycloak_client() {
   _require_vars KEYCLOAK_REALM KEYCLOAK_RESOURCE KEYCLOAK_SECRET KEYCLOAK_SERVER_URL KEYCLOAK_WAR \
     WILDFLY_APP_HOME || return
-  _keycloak_client "${KEYCLOAK_REALM}" "${KEYCLOAK_RESOURCE}" "${KEYCLOAK_SECRET}" "${KEYCLOAK_SERVER_URL}"
+  _keycloak_verify_audience || return
+  _keycloak_client "${KEYCLOAK_REALM}" "${KEYCLOAK_RESOURCE}" "${KEYCLOAK_SECRET}" "${KEYCLOAK_SERVER_URL}" \
+    "${KEYCLOAK_VERIFY_AUDIENCE:-false}"
 }
 
 # Like config_keycloak_client, but environment variables of the same names override the values
 # when Wildfly runs. For a Wildfly that runs only this app, such as in a container.
 # Required: KEYCLOAK_REALM KEYCLOAK_RESOURCE KEYCLOAK_SECRET KEYCLOAK_SERVER_URL KEYCLOAK_WAR WILDFLY_APP_HOME
+# Optional: KEYCLOAK_VERIFY_AUDIENCE: as for config_keycloak_client, and also overridden when
+#           Wildfly runs
 config_keycloak_client_dynamic() {
   _require_vars KEYCLOAK_REALM KEYCLOAK_RESOURCE KEYCLOAK_SECRET KEYCLOAK_SERVER_URL KEYCLOAK_WAR \
     WILDFLY_APP_HOME || return
+  _keycloak_verify_audience || return
   _keycloak_client "\${env.KEYCLOAK_REALM:${KEYCLOAK_REALM}}" "\${env.KEYCLOAK_RESOURCE:${KEYCLOAK_RESOURCE}}" \
-    "\${env.KEYCLOAK_SECRET:${KEYCLOAK_SECRET}}" "\${env.KEYCLOAK_SERVER_URL:${KEYCLOAK_SERVER_URL}}"
+    "\${env.KEYCLOAK_SECRET:${KEYCLOAK_SECRET}}" "\${env.KEYCLOAK_SERVER_URL:${KEYCLOAK_SERVER_URL}}" \
+    "\${env.KEYCLOAK_VERIFY_AUDIENCE:${KEYCLOAK_VERIFY_AUDIENCE:-false}}"
 }
 
 # Adds the Oracle datasource java:/jdbc/ORACLE_DATASOURCE, using the values as they are now.
@@ -493,7 +515,7 @@ _cli() {
 
 # Arguments: realm, resource, secret, server URL: values or ${env.X:default} expressions.
 _keycloak_client() {
-  local config="principal-attribute=\"preferred_username\",ssl-required=EXTERNAL,resource=\"$2\",realm=\"$1\",auth-server-url=$4"
+  local config="principal-attribute=\"preferred_username\",ssl-required=EXTERNAL,resource=\"$2\",realm=\"$1\",auth-server-url=$4,verify-token-audience=\"$5\""
   _cli <<EOF
 batch
 /subsystem=elytron-oidc-client/secure-deployment="${KEYCLOAK_WAR}"/:add(${config})
