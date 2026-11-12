@@ -86,7 +86,7 @@ Must be executed once per app installed in Wildfly, with Wildfly running. These 
 
 | Function                       | Variables                                                                                 |
 |--------------------------------|-------------------------------------------------------------------------------------------|
-| config_keycloak_client         | KEYCLOAK_REALM, KEYCLOAK_RESOURCE, KEYCLOAK_SECRET, KEYCLOAK_SERVER_URL, KEYCLOAK_WAR     |
+| config_keycloak_client         | KEYCLOAK_REALM, KEYCLOAK_RESOURCE, KEYCLOAK_SECRET, KEYCLOAK_SERVER_URL, KEYCLOAK_WAR; optionally KEYCLOAK_VERIFY_AUDIENCE |
 | config_keycloak_client_dynamic | The same: environment variables of the same names, but KEYCLOAK_WAR, override them when Wildfly runs |
 | config_oracle_client           | ORACLE_DATASOURCE, ORACLE_SERVER, ORACLE_SERVICE, ORACLE_USER, ORACLE_PASS                |
 | config_oracle_client_dynamic   | The same: environment variables of the same names, but ORACLE_DATASOURCE, override them when Wildfly runs |
@@ -99,6 +99,7 @@ Must be executed once per app installed in Wildfly, with Wildfly running. These 
 | KEYCLOAK_SECRET     | Keycloak Secret                                                          |
 | KEYCLOAK_SERVER_URL | Scheme, host name, and port of Keycloak authentication server            |
 | KEYCLOAK_WAR        | Name of war file to secure with Keycloak (app key)                       |
+| KEYCLOAK_VERIFY_AUDIENCE | Optional. `true` makes the app take only the bearer tokens whose audience (`aud`) names KEYCLOAK_RESOURCE, and not those the realm issues to its other clients; recommended when the realm is shared. Keycloak must first put that audience in the tokens meant for the app, with an audience mapper on each client that calls it, the app's own included. `false` or unset, the default, takes any of the realm's tokens. Browser logins are not affected |
 | ORACLE_DATASOURCE   | Name of Oracle datasource (app key)                                      |
 | ORACLE_SERVER       | Host name and port of Oracle server to use to connect to DB from Wildfly |
 | ORACLE_SERVICE      | Oracle Service name to use to connect to DB from Wildfly                 |
